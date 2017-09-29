@@ -5,6 +5,11 @@
 const webpack = require('webpack');
 const pathLib = require('path');
 
+const webpackConfigLoader = require('react-on-rails/webpackConfigLoader');
+const configPath = resolve('..', 'config');
+const { output, settings } = webpackConfigLoader(configPath);
+const hmr = settings.dev_server.hmr;
+
 const devBuild = process.env.NODE_ENV !== 'production';
 
 const config = {
@@ -16,8 +21,10 @@ const config = {
   ],
 
   output: {
-    filename: 'webpack-bundle.js',
-    path: pathLib.resolve(__dirname, '../app/assets/webpack'),
+    filename: isHMR ? '[name]-[hash].js' : '[name]-[chunkhash].js',
+    chunkFilename: '[name]-[chunkhash].chunk.js',
+    publicPath: output.publicPath,
+    path: output.path,
   },
 
   resolve: {
