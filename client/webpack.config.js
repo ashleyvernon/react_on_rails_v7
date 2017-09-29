@@ -10,6 +10,8 @@ const configPath = resolve('..', 'config');
 const { output, settings } = webpackConfigLoader(configPath);
 const hmr = settings.dev_server.hmr;
 
+const ManifestPlugin = require('webpack-manifest-plugin');
+
 const devBuild = process.env.NODE_ENV !== 'production';
 
 const config = {
@@ -32,6 +34,10 @@ const config = {
   },
   plugins: [
     new webpack.EnvironmentPlugin({ NODE_ENV: 'development' }),
+    new ManifestPlugin({
+      publicPath: output.publicPath,
+      writeToFileEmit: true
+    }),
   ],
   module: {
     rules: [
